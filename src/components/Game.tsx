@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Box, Card, CardActions, CardContent, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Card, Button, Grid, CardMedia } from '@mui/material';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';

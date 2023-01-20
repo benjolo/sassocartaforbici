@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Button, Grid} from '@mui/material';
 import { Link } from "react-router-dom";
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 

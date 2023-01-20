@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import NewGame from './components/NewGame';
 import MenuTop from './components/MenuTop';
