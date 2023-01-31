@@ -4,6 +4,7 @@ import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 
 const Home = () => {
 
+    console.log("Home.tsx");
     return (
         <Box>
             <Grid className='backgroundGif' sx={{display: "flex", justifyContent: "space-around", alignItems: "center", height:'40vh', color: 'white'}}></Grid>

@@ -1,74 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Card, Button, Grid, CardMedia, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
-interface IMossa {
-  name: string;
-}
-
-const NewGame: React.FC = () => {
-  const [mossaList, setMossaList] = useState<IMossa[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+import { useMovesStore } from '../store/Moves';
 
 
-  useEffect(() => {
-    const fetchData = () => {
-        return new Promise((resolve, reject) => {
-            fetch("https://rps101.pythonanywhere.com/api/v1/objects/all")
-                .then(res => res.json())
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
-    };
+const NewGame = () => {
 
-    setIsLoading(true);
-    fetchData()
-      .then(data => {
-        setMossaList(data as IMossa[]);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        setError(err);
-        setIsLoading(false);
-      });
-  }, []);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: </p>;
-  }
+  const store = useMovesStore(state => state);
+  const newMoves = useMovesStore(state => state.updateMoves);
+  const choose = useMovesStore(state => state.chooseMove);
+  const setComputerMove = useMovesStore(state => state.setComputerMove);
+  const setFetchOk = useMovesStore(state => state.setFetchOk);
 
   
+  console.log("newgame")
+  
+    fetch('https://rps101.pythonanywhere.com/api/v1/objects/all')
+      .then(response => response.json())
+      .then(data => data.map(async (move: any, index:number) => {
+        if(!store.moves.find(({ name }) => name === move))
+        {
+          let path: string ="";
+          if(index === 18 || index === 35 || index == 39 || index == 54 || index == 48 || index == 75 || index == 84 || index == 85 || index == 88 || index == 90 )
+            path = `https://rps101.pythonanywhere.com/static/${index + 1}.gif`
+          else
+            path = `https://rps101.pythonanywhere.com/static/${index + 1}.png`
+          
+          newMoves({ id: index + 1, name: move, image: path})
+        }
+        else
+          console.log("already exist")
+      }))
 
-  return (
+  function handleClick(index:number) {
+    setFetchOk(false);
+    choose(index + 1);
+    const random = Math.floor(Math.random() * store.moves.length) + 1;
+    setComputerMove(random);
+  }
+
+  return (<>
     <Box>
         <Grid sx={{display: "flex", justifyContent: "space-around", alignItems: "center", height:'30vh', color: 'white', flexDirection:"column"}}>
         <h1>New Game</h1>
         <h3>Choose your move</h3>
-    </Grid>
-    <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
-      {mossaList.map((data, index) => (
-        // <Button onClick={() => handleClick(data.toString())}>
-        <Link to="/game" className='card' state={{ move: data.toString(), mossaList: mossaList}}>
-            <Button variant="contained" sx={{backgroundColor: 'transparent'}} size="large">
-            <Card key={index} sx={{ width:"20vh", backgroundColor: "transparent", boxShadow:'none'}}>
-                <h3>{data.toString()}</h3>
-            <CardMedia component="img" height="auto" src={`https://rps101.pythonanywhere.com/static/${index + 1}.png`}></CardMedia>
-            </Card>
-        </Button>
-        </Link>
-        // </Button>
-      ))}
+        <TextField id="outlined-basic" label="Outlined" variant="outlined" color='success' sx={{color: "white"}}/>
+      </Grid>
+      <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+        {
+          store.moves.map((data, index) => ( 
+            <Link key={index} to="/game" className='card' onClick={() => handleClick(index)}>
+                <Button variant="contained" sx={{backgroundColor: 'transparent'}} size="large">
+                <Card sx={{ width:"20vh", backgroundColor: "transparent", boxShadow:'none'}}>
+                    <h3>{data.name}</h3>
+                <CardMedia component="img" height="auto" src={data.image}></CardMedia>
+                </Card>
+            </Button>
+            </Link>
+          ))
+        }
+      </Box>
     </Box>
-    </Box>
+    </>
   );
+
 };
 
 export default NewGame;

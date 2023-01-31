@@ -108,9 +108,8 @@ function MenuTop() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, i) => (
-              <Link to={`/${page.toLowerCase()}`}>
+              <Link key={i} to={`/${page.toLowerCase()}`}>
                 <Button
-                key={i}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
@@ -124,4 +123,4 @@ function MenuTop() {
     </AppBar>
   );
 }
-export default MenuTop;
+export default React.memo(MenuTop);
