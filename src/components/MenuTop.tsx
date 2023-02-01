@@ -123,4 +123,4 @@ function MenuTop() {
     </AppBar>
   );
 }
-export default React.memo(MenuTop);
+export default MenuTop;
